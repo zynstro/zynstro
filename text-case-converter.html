@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pro Text Case Converter</title>
+<style>
+  :root {
+    --primary: #007bff;
+    --secondary: #0056b3;
+    --bg: #f4f9ff;
+    --text: #222;
+    --card-bg: rgba(255, 255, 255, 0.8);
+    --shadow: rgba(0, 0, 0, 0.15);
+  }
+
+  body.dark {
+    --bg: #0d1117;
+    --text: #e2e2e2;
+    --card-bg: rgba(30, 30, 30, 0.8);
+    --shadow: rgba(255, 255, 255, 0.1);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    text-align: center;
+    margin: 0;
+    padding: 30px 10px;
+    transition: background 0.4s, color 0.4s;
+  }
+
+  h1 {
+    color: var(--primary);
+    font-size: 2em;
+    margin-bottom: 20px;
+  }
+
+  .converter-box {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 8px 25px var(--shadow);
+    max-width: 750px;
+    margin: 0 auto;
+    padding: 25px;
+    transition: all 0.3s ease;
+  }
+
+  textarea {
+    width: 100%;
+    height: 160px;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    background: transparent;
+    color: var(--text);
+    resize: none;
+    outline: none;
+  }
+
+  .toolbar {
+    margin: 15px 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn {
+    background: var(--primary);
+    border: none;
+    color: #fff;
+    border-radius: 8px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+  }
+
+  .btn:hover {
+    background: var(--secondary);
+    transform: translateY(-2px);
+  }
+
+  .btn-outline {
+    background: none;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+  }
+
+  .btn-outline:hover {
+    background: var(--primary);
+    color: #fff;
+  }
+
+  .preview {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    background: var(--secondary);
+    color: #fff;
+    min-height: 60px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+  }
+
+  .counter {
+    margin-top: 10px;
+    font-size: 14px;
+    color: gray;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--primary);
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 6px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+
+  .toast.show {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 1.6em; }
+    .btn { font-size: 13px; padding: 8px 12px; }
+  }
+</style>
+</head>
+<body>
+  <h1>💡 Pro Text Case Converter</h1>
+  <div class="converter-box">
+    <textarea id="inputArea" placeholder="Type or paste your text here..."></textarea>
+
+    <div class="toolbar">
+      <button class="btn" onclick="convert('upper')">UPPERCASE</button>
+      <button class="btn" onclick="convert('lower')">lowercase</button>
+      <button class="btn" onclick="convert('sentence')">Sentence case</button>
+      <button class="btn" onclick="convert('title')">Title Case</button>
+      <button class="btn" onclick="convert('alt')">aLtErNaTiNg</button>
+      <button class="btn-outline" onclick="copyText()">Copy</button>
+      <button class="btn-outline" onclick="pasteText()">Paste</button>
+      <button class="btn-outline" onclick="downloadText()">Download</button>
+      <button class="btn-outline" onclick="toggleMode()">🌗 Mode</button>
+      <button class="btn-outline" onclick="clearText()">Clear</button>
+    </div>
+
+    <div class="counter" id="counter">Words: 0 | Characters: 0 | Detected: Normal Text</div>
+    <div class="preview" id="preview">Live preview will appear here...</div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+  const textArea = document.getElementById("inputArea");
+  const preview = document.getElementById("preview");
+  const counter = document.getElementById("counter");
+  const toast = document.getElementById("toast");
+
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 2000);
+  }
+
+  function updateStats() {
+    const text = textArea.value.trim();
+    const words = text ? text.split(/\s+/).length : 0;
+    const chars = text.length;
+    const detected = detectCase(text);
+    counter.textContent = `Words: ${words} | Characters: ${chars} | Detected: ${detected}`;
+    preview.textContent = text || "Live preview will appear here...";
+    detectDirection(text);
+  }
+
+  function detectCase(t) {
+    if (!t) return "Normal Text";
+    if (t === t.toUpperCase()) return "UPPERCASE";
+    if (t === t.toLowerCase()) return "lowercase";
+    if (t[0] === t[0].toUpperCase()) return "Sentence case";
+    return "Mixed case";
+  }
+
+  function detectDirection(t) {
+    const rtl = /[\u0600-\u06FF\u0750-\u077F]/.test(t);
+    textArea.style.direction = rtl ? "rtl" : "ltr";
+  }
+
+  function convert(type) {
+    let text = textArea.value;
+    switch (type) {
+      case "upper": text = text.toUpperCase(); break;
+      case "lower": text = text.toLowerCase(); break;
+      case "sentence":
+        text = text.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, c => c.toUpperCase());
+        break;
+      case "title":
+        text = text.toLowerCase().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        break;
+      case "alt":
+        text = [...text].map((ch, i) => i % 2 ? ch.toLowerCase() : ch.toUpperCase()).join('');
+        break;
+    }
+    textArea.value = text;
+    updateStats();
+    showToast(`Converted to ${type} case!`);
+  }
+
+  function copyText() {
+    navigator.clipboard.writeText(textArea.value);
+    showToast("Text copied!");
+  }
+
+  function pasteText() {
+    navigator.clipboard.readText().then(txt => {
+      textArea.value = txt;
+      updateStats();
+      showToast("Text pasted!");
+    });
+  }
+
+  function downloadText() {
+    const blob = new Blob([textArea.value], { type: "text/plain" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "converted_text.txt";
+    a.click();
+    showToast("File downloaded!");
+  }
+
+  function clearText() {
+    textArea.value = "";
+    updateStats();
+    showToast("Cleared!");
+  }
+
+  function toggleMode() {
+    document.body.classList.toggle("dark");
+  }
+
+  textArea.addEventListener("input", updateStats);
+  updateStats();
+</script>
+</body>
+</html>
