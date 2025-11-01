@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ultimate Regex Code Generator & Debugger 🧑‍💻</title>
+  <style>
+    :root {
+      --primary-color: #007bff;
+      --primary-hover: #0056b3;
+      --background-color: #f0f0f5;
+      --card-bg: #ffffff;
+      --border-color: #ccc;
+      --match-color: #d7f7e9;
+      --error-color: #f8d7da;
+      --no-match-color: #fff3cd;
+      --text-color: #333;
+      --code-bg: #f9f9f9;
+      --header-color: #4a4e69;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--background-color);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--text-color);
+    }
+
+    .container {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 900px; /* Max width for complex output */
+    }
+
+    h2 {
+      color: var(--header-color);
+      text-align: center;
+      margin-bottom: 25px;
+      border-bottom: 3px solid var(--primary-color);
+      padding-bottom: 10px;
+    }
+    
+    h3 {
+        color: var(--primary-color);
+        margin-top: 25px;
+        margin-bottom: 15px;
+    }
+    
+    label {
+        font-weight: 600;
+        display: block;
+        margin-top: 15px;
+        margin-bottom: 5px;
+    }
+
+    /* Input Fields */
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      box-sizing: border-box;
+      font-family: 'Consolas', 'Courier New', monospace;
+    }
+    
+    textarea {
+        min-height: 180px;
+        resize: vertical;
+    }
+
+    /* Pattern Input Visual Enhancement (Simulated Syntax Check) */
+    #regexInput {
+        border-left: 5px solid var(--primary-color);
+        transition: border-color 0.3s;
+    }
+    .regex-valid {
+        border-left-color: #28a745 !important; /* Green */
+    }
+    .regex-invalid {
+        border-left-color: #dc3545 !important; /* Red */
+    }
+
+    /* Flags & Control */
+    .flags-group {
+        display: flex;
+        gap: 15px;
+        margin: 15px 0 20px;
+        align-items: center;
+        flex-wrap: wrap;
+        border: 1px dashed var(--border-color);
+        padding: 10px;
+        border-radius: 8px;
+    }
+    
+    .flags-group label {
+        font-weight: normal;
+        margin: 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Results Styling */
+    .result-section {
+        margin-top: 30px;
+        border-top: 2px solid var(--border-color);
+        padding-top: 20px;
+    }
+    
+    #highlightedText {
+        padding: 15px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background: var(--code-bg);
+        min-height: 50px;
+        margin-top: 10px;
+        line-height: 1.6;
+        text-align: left;
+        font-family: 'Consolas', 'Courier New', monospace;
+        white-space: pre-wrap;
+    }
+
+    .match-highlight {
+        background-color: #ffeb3b;
+        padding: 1px 3px;
+        border-radius: 3px;
+        font-weight: bold;
+        color: #000;
+    }
+    
+    /* Table for Match Details */
+    .match-table-wrapper {
+        overflow-x: auto;
+    }
+    .match-details-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        font-size: 14px;
+        min-width: 600px;
+    }
+    .match-details-table th, .match-details-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    .match-details-table th {
+        background-color: var(--primary-color);
+        color: white;
+    }
+    .match-details-table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    /* Code Generator & Permalinks */
+    .code-output, .permalink-output {
+        background: #f0f8ff;
+        border: 1px dashed var(--primary-color);
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 10px;
+        position: relative;
+    }
+    .code-output pre, .permalink-output pre {
+        white-space: pre-wrap;
+        word-break: break-all;
+        margin: 0;
+        font-family: 'Consolas', 'Courier New', monospace;
+        font-size: 14px;
+    }
+    
+    .copy-btn {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        padding: 5px 10px;
+        background: var(--primary-hover);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+    }
+    .copy-btn:hover {
+        background: #004085;
+    }
+
+    #message {
+        margin-top: 10px;
+        font-weight: 600;
+        min-height: 20px;
+        text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2> Ultimate Regex Code Generator & Debugger 🧑‍💻</h2>
+
+    <label for="regexInput">Regular Expression (Pattern):</label>
+    <input type="text" id="regexInput" placeholder="Enter pattern (e.g. (\w+)\s+(\d+))" value="(\w+)\s+(\d+)" oninput="handleInput()">
+    
+    <div class="flags-group">
+        <label>Flags:</label>
+        <label><input type="checkbox" id="flagG" checked onchange="handleInput()"> Global (g)</label>
+        <label><input type="checkbox" id="flagI" onchange="handleInput()"> Ignore Case (i)</label>
+        <label><input type="checkbox" id="flagM" onchange="handleInput()"> Multiline (m)</label>
+        <label><input type="checkbox" id="flagS" onchange="handleInput()"> DotAll (s)</label>
+        <label><input type="checkbox" id="flagU" onchange="handleInput()"> Unicode (u)</label>
+        <label><input type="checkbox" id="flagY" onchange="handleInput()"> Sticky (y)</label>
+    </div>
+    
+    <label for="textInput">Test String:</label>
+    <textarea id="textInput" placeholder="Enter test string with multiple lines here..." oninput="handleInput()">Alpha 123
+Beta 456
+Gamma 789</textarea>
+
+    <label for="replacementInput">Replacement String (for Substitution):</label>
+    <input type="text" id="replacementInput" placeholder="Enter replacement string (e.g., $2 $1)" value="$2 $1" oninput="handleInput()">
+
+    <div id="message"></div>
+    
+    <div class="result-section">
+        <h3>Live Match Highlights</h3>
+        <div id="highlightedText">Type your regex and text to see results...</div>
+
+        <h3>Per-Match Capture Group Table</h3>
+        <div class="match-table-wrapper" id="matchTableWrapper">
+            </div>
+
+        <h3>Substitution Result</h3>
+        <div class="code-output" id="result-replace">
+            <button class="copy-btn" onclick="copyContent('result-replace')">Copy</button>
+            <pre>Replacement output will appear here.</pre>
+        </div>
+        
+        <hr>
+
+        <h3>Code Generator (JavaScript Example)</h3>
+        <div class="code-output" id="codeGenerator">
+            <button class="copy-btn" onclick="copyContent('codeGenerator')">Copy</button>
+            <pre>// JavaScript: Using matchAll for full details</pre>
+        </div>
+        
+        <h3>Share Permalink</h3>
+        <div class="permalink-output" id="permalinkOutput">
+            <button class="copy-btn" onclick="copyContent('permalinkOutput')">Copy</button>
+            <pre>Generated URL will appear here.</pre>
+        </div>
+    </div>
+  </div>
+
+  <script>
+    const regexInput = document.getElementById("regexInput");
+    const textInput = document.getElementById("textInput");
+    const replacementInput = document.getElementById("replacementInput");
+    const highlightedText = document.getElementById("highlightedText");
+    const matchTableWrapper = document.getElementById("matchTableWrapper");
+    const resultReplace = document.getElementById("result-replace");
+    const codeGenerator = document.getElementById("codeGenerator");
+    const permalinkOutput = document.getElementById("permalinkOutput");
+    const message = document.getElementById("message");
+    
+    const flags = {
+        g: document.getElementById("flagG"), i: document.getElementById("flagI"), 
+        m: document.getElementById("flagM"), s: document.getElementById("flagS"), 
+        u: document.getElementById("flagU"), y: document.getElementById("flagY")
+    };
+    
+    let debounceTimer;
+
+    // --- Utility Functions ---
+
+    function showMessage(text, type = 'success') {
+        message.textContent = text;
+        message.style.color = type === 'success' ? 'green' : (type === 'error' ? 'red' : 'orange');
+        setTimeout(() => { message.textContent = ''; }, 3000);
+    }
+
+    async function copyContent(elementId) {
+        const textToCopy = document.getElementById(elementId).querySelector('pre').textContent;
+        try {
+            await navigator.clipboard.writeText(textToCopy);
+            showMessage(`✅ Code copied successfully!`, 'success');
+        } catch (err) {
+            showMessage("❌ Failed to copy to clipboard.", 'error');
+        }
+    }
+    
+    // --- Main Logic ---
+
+    function getActiveFlags() {
+        return Object.keys(flags).filter(flag => flags[flag].checked).join('');
+    }
+
+    function handleInput() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            testAndGenerate();
+        }, 150);
+        // Update permalink instantly if desired, but debounce test for performance
+        generatePermalink(); 
+    }
+
+    function generateCodeSnippet(pattern, activeFlags) {
+        const escPattern = pattern.replace(/\\/g, '\\\\').replace(/\//g, '\\/'); // Escape slashes and backslashes
+        const regexDeclaration = `const regex = /${escPattern}/${activeFlags || 'g'};`;
+        const code = 
+`// JavaScript Code Snippet
+${regexDeclaration}
+const testString = \`${textInput.value.replace(/`/g, '\\`')}\`; // Backticks allow multiline
+
+// 1. Find all matches (returns an iterator of match objects)
+const matches = [...testString.matchAll(regex)]; 
+
+// 2. Perform substitution
+const replacementString = "${replacementInput.value.replace(/"/g, '\\"')}";
+const result = testString.replace(regex, replacementString);
+
+console.log("Matches:", matches);
+console.log("Substitution Result:", result);`;
+
+        codeGenerator.querySelector('pre').textContent = code;
+    }
+
+    function generatePermalink() {
+        const pattern = regexInput.value;
+        const text = textInput.value;
+        const replace = replacementInput.value;
+        const activeFlags = getActiveFlags();
+        
+        // Use URLSearchParams for safe encoding of special characters
+        const params = new URLSearchParams();
+        if (pattern) params.set('p', pattern);
+        if (text) params.set('t', text);
+        if (replace) params.set('r', replace);
+        if (activeFlags) params.set('f', activeFlags);
+
+        const permalink = `${window.location.protocol}//${window.location.host}${window.location.pathname}?${params.toString()}`;
+        permalinkOutput.querySelector('pre').textContent = permalink;
+        // Also update the browser history, but don't force a reload
+        history.replaceState(null, '', `?${params.toString()}`);
+    }
+
+    function loadFromPermalink() {
+        const params = new URLSearchParams(window.location.search);
+        
+        // Set values from URL parameters, defaulting to current input values if parameters are missing
+        regexInput.value = params.get('p') || regexInput.value;
+        textInput.value = params.get('t') || textInput.value;
+        replacementInput.value = params.get('r') || replacementInput.value;
+        
+        const loadedFlags = params.get('f') || '';
+        Object.keys(flags).forEach(flag => {
+            flags[flag].checked = loadedFlags.includes(flag);
+        });
+
+        testAndGenerate();
+    }
+
+
+    function testAndGenerate() {
+      const pattern = regexInput.value;
+      const text = textInput.value;
+      const replacement = replacementInput.value;
+      const activeFlags = getActiveFlags();
+
+      // Clear previous styles/output
+      regexInput.classList.remove('regex-valid', 'regex-invalid');
+      highlightedText.className = '';
+      matchTableWrapper.innerHTML = '';
+      
+      try {
+        if (!pattern) {
+            highlightedText.textContent = "Enter a regular expression pattern.";
+            regexInput.classList.remove('regex-valid', 'regex-invalid');
+            resultReplace.querySelector('pre').textContent = "No pattern provided.";
+            generateCodeSnippet("", activeFlags);
+            return;
+        }
+
+        // Must include 'g' flag for matchAll to find all matches
+        const regex = new RegExp(pattern, activeFlags.includes('g') ? activeFlags : activeFlags + 'g');
+        const matches = [...text.matchAll(regex)];
+
+        // --- 1. Highlight Matches & Pattern Visual ---
+        regexInput.classList.add('regex-valid');
+
+        if (matches.length > 0) {
+            let lastIndex = 0;
+            let parts = [];
+            matches.forEach(match => {
+                const matchIndex = match.index;
+                const fullMatch = match[0];
+                parts.push(document.createTextNode(text.substring(lastIndex, matchIndex)).textContent);
+                parts.push(`<span class="match-highlight">${fullMatch}</span>`);
+                lastIndex = matchIndex + fullMatch.length;
+            });
+            parts.push(document.createTextNode(text.substring(lastIndex)).textContent);
+            highlightedText.innerHTML = parts.join('');
+            highlightedText.classList.add('match-success');
+        } else {
+            highlightedText.textContent = text;
+            highlightedText.classList.add('match-warn');
+        }
+        
+        // --- 2. Per-Match Capture Group Table ---
+        if (matches.length > 0) {
+            const groupCount = matches[0].length - 1;
+            let tableHTML = `<table class="match-details-table"><thead><tr><th>#</th><th>Full Match</th><th>Index</th>`;
+            for(let i=1; i<=groupCount; i++) {
+                tableHTML += `<th>Group ${i}</th>`;
+            }
+            tableHTML += `</tr></thead><tbody>`;
+
+            matches.forEach((match, index) => {
+                tableHTML += `<tr><td>${index + 1}</td><td>${match[0]}</td><td>${match.index}</td>`;
+                for(let i=1; i<=groupCount; i++) {
+                    tableHTML += `<td>${match[i] || '—'}</td>`;
+                }
+                tableHTML += `</tr>`;
+            });
+            tableHTML += `</tbody></table>`;
+            matchTableWrapper.innerHTML = tableHTML;
+        } else {
+            matchTableWrapper.innerHTML = `<p style="text-align:center;">No matches found to generate a detailed table.</p>`;
+        }
+        
+        // --- 3. Perform Substitution ---
+        const substitutedText = text.replace(regex, replacement);
+        resultReplace.querySelector('pre').textContent = substitutedText;
+
+        // --- 4. Generate Code ---
+        generateCodeSnippet(pattern, activeFlags);
+        
+        // --- 5. Generate Permalink (Done in handleInput, but call again just in case) ---
+        generatePermalink();
+
+      } catch (e) {
+        // Handle Regex Syntax Errors
+        regexInput.classList.add('regex-invalid');
+        highlightedText.textContent = "Syntax Error in Regex Pattern! Error: " + e.message;
+        highlightedText.classList.add('match-error');
+        resultReplace.querySelector('pre').textContent = `Error: Cannot perform substitution due to invalid regex: ${e.message}`;
+        matchTableWrapper.innerHTML = `<p style="color:red; text-align:center;">Invalid Pattern: ${e.message}</p>`;
+        generateCodeSnippet(pattern, activeFlags); // Still generates code, but with error pattern
+      }
+    }
+
+    // Load initial state (from URL or defaults)
+    loadFromPermalink();
+  </script>
+
+</body>
+</html>
