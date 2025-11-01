@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Ultimate Barcode Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0faff 0%, #e0f0ff 100%);
+            margin: 0;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0, 50, 150, 0.15);
+            text-align: left;
+        }
+
+        h2 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.8em;
+        }
+
+        /* Form Controls */
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input[type="text"], select, input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #cce0ff;
+            border-radius: 10px;
+            box-sizing: border-box;
+            background-color: #f9fcff;
+        }
+        
+        /* Layout for rows and color inputs */
+        .row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .row > .control-group {
+            flex: 1;
+        }
+
+        .color-input-wrapper {
+            display: flex;
+            align-items: center;
+            padding: 0;
+            background: none;
+            border: none;
+        }
+
+        .color-input-wrapper input[type="color"] {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        
+        /* Buttons */
+        button {
+            width: 100%;
+            padding: 14px 20px;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        #generateBtn {
+            background-color: #007bff;
+            margin-top: 20px;
+        }
+
+        #generateBtn:hover {
+            background-color: #0069d9;
+            transform: translateY(-1px);
+        }
+
+        .download-group {
+            display: none;
+            margin-top: 15px;
+            gap: 15px;
+        }
+
+        .download-group button {
+            background-color: #28a745;
+            flex: 1;
+        }
+        .download-group button:hover {
+            background-color: #1e8734;
+        }
+
+        /* Output Area */
+        #outputArea {
+            min-height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px;
+            padding: 20px;
+            border: 2px dashed #007bff;
+            border-radius: 10px;
+            background-color: #f8faff;
+        }
+
+        #barcodeOutput svg {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Status Message */
+        #statusMessage {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 16px;
+            color: #dc3545;
+        }
+        
+        /* Validation Feedback */
+        #dataFeedback {
+            margin-top: 5px;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Ultimate Barcode Generator</h2>
+        
+        <div class="control-group">
+            <label for="barcodeText">Data to Encode:</label>
+            <input type="text" id="barcodeText" placeholder="Enter text or number" />
+            <div id="dataFeedback" style="color: #6c757d;"></div>
+        </div>
+
+        <div class="row">
+            <div class="control-group">
+                <label for="formatSelect">Barcode Format:</label>
+                <select id="formatSelect">
+                    <option value="CODE128">CODE128 (Alphanumeric)</option>
+                    <option value="EAN13">EAN-13 (12/13 digits, Retail)</option>
+                    <option value="UPC">UPC (11/12 digits, US Retail)</option>
+                    <option value="CODE39">CODE39 (Basic Alphanumeric)</option>
+                    <option value="ITF14">ITF-14 (Shipping/Packaging)</option>
+                </select>
+            </div>
+             <div class="control-group">
+                <label for="quietZoneInput">Quiet Zone (px):</label>
+                <input type="number" id="quietZoneInput" value="10" min="0" max="50" />
+                <small style="display: block; color: #666; font-size: 12px;">Mandatory white space for scanning.</small>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="control-group">
+                <label for="heightInput">Height (px):</label>
+                <input type="number" id="heightInput" value="100" min="50" max="300" />
+            </div>
+             <div class="control-group">
+                <label for="widthInput">Bar Width (Ratio 1-5):</label>
+                <input type="number" id="widthInput" value="2" min="1" max="5" step="0.5" />
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="control-group">
+                <label for="fontSizeInput">Text Font Size (px):</label>
+                <input type="number" id="fontSizeInput" value="18" min="8" max="40" />
+            </div>
+             <div class="control-group">
+                <label for="fontSelect">Text Font:</label>
+                <select id="fontSelect">
+                    <option value="monospace">Monospace (Default)</option>
+                    <option value="sans-serif">Sans-serif</option>
+                    <option value="serif">Serif</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="control-group">
+                <label>Barcode Color:</label>
+                <div class="color-input-wrapper">
+                    <input type="color" id="lineColor" value="#000000" />
+                    <input type="text" id="lineColorHex" value="#000000" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label>Background Color:</label>
+                <div class="color-input-wrapper">
+                    <input type="color" id="bgColor" value="#ffffff" />
+                    <input type="text" id="bgColorHex" value="#ffffff" />
+                </div>
+            </div>
+        </div>
+
+        <button id="generateBtn">✨ Generate Barcode</button>
+        
+        <div id="statusMessage"></div>
+        
+        <div id="outputArea">
+            <div id="barcodeOutput">
+                </div>
+        </div>
+
+        <div class="row download-group" id="downloadGroup">
+            <button id="downloadSvgBtn">⬇️ Download SVG (Vector)</button>
+            <button id="downloadPngBtn">⬇️ Download PNG (Raster)</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+
+    <script>
+        // --- DOM Elements ---
+        const D = id => document.getElementById(id);
+        const [textInput, formatSelect, heightInput, widthInput, quietZoneInput, fontSizeInput, fontSelect, 
+               generateBtn, downloadGroup, downloadSvgBtn, downloadPngBtn, barcodeOutput, statusMessage, 
+               lineColorInput, bgColorInput, lineColorHex, bgColorHex, dataFeedback] = 
+              [D("barcodeText"), D("formatSelect"), D("heightInput"), D("widthInput"), D("quietZoneInput"), D("fontSizeInput"), D("fontSelect"), 
+               D("generateBtn"), D("downloadGroup"), D("downloadSvgBtn"), D("downloadPngBtn"), D("barcodeOutput"), D("statusMessage"), 
+               D("lineColor"), D("bgColor"), D("lineColorHex"), D("bgColorHex"), D("dataFeedback")];
+
+        // --- Configuration & Validation ---
+        const formatValidation = {
+            'EAN13': { min: 12, max: 13, chars: 'digits' },
+            'UPC': { min: 11, max: 12, chars: 'digits' },
+            'ITF14': { min: 13, max: 14, chars: 'digits' },
+            'CODE128': { min: 1, max: 80, chars: 'all' },
+            'CODE39': { min: 1, max: 43, chars: 'uppercase letters, digits, and specific symbols' }
+        };
+
+        // --- Event Listeners: Color Sync & Validation ---
+        lineColorInput.addEventListener('input', () => lineColorHex.value = lineColorInput.value.toUpperCase());
+        bgColorInput.addEventListener('input', () => bgColorHex.value = bgColorInput.value.toUpperCase());
+        lineColorHex.addEventListener('input', () => lineColorInput.value = lineColorHex.value);
+        bgColorHex.addEventListener('input', () => bgColorInput.value = bgColorHex.value);
+        
+        textInput.addEventListener('input', validateData);
+        formatSelect.addEventListener('change', validateData);
+
+        function validateData() {
+            const text = textInput.value.trim();
+            const format = formatSelect.value;
+            const validation = formatValidation[format];
+            
+            if (!validation) return; 
+
+            const len = text.length;
+            let message = `Format: ${validation.chars}. `;
+            
+            if (len === 0) {
+                dataFeedback.textContent = message + `Enter data to encode.`;
+                dataFeedback.style.color = '#6c757d'; // Default color
+            } else if (len < validation.min || len > validation.max) {
+                dataFeedback.textContent = message + `Length: ${len}. Requires ${validation.min}${validation.min !== validation.max ? ' to ' + validation.max : ''} characters.`;
+                dataFeedback.style.color = '#dc3545'; // Error color
+            } else {
+                dataFeedback.textContent = message + `Length: ${len}. Looks valid.`;
+                dataFeedback.style.color = '#28a745'; // Success color
+            }
+        }
+        
+        // --- Core Generator Function ---
+        function generateBarcode() {
+            const text = textInput.value.trim();
+            const format = formatSelect.value;
+            const height = parseInt(heightInput.value);
+            const width = parseFloat(widthInput.value);
+            const quietZone = parseInt(quietZoneInput.value);
+            const fontSize = parseInt(fontSizeInput.value);
+            const font = fontSelect.value;
+            const lineColor = lineColorHex.value;
+            const bgColor = bgColorHex.value;
+
+            // Reset view
+            statusMessage.textContent = '';
+            downloadGroup.style.display = 'none';
+            barcodeOutput.innerHTML = ''; // Clear previous output
+
+            if (text === "") {
+                statusMessage.textContent = "❌ Please enter data to encode.";
+                return;
+            }
+
+            // Simple validation check before attempting generation
+            const validation = formatValidation[format];
+            if (text.length < validation.min || text.length > validation.max) {
+                 statusMessage.textContent = `❌ Cannot generate. Data must be between ${validation.min} and ${validation.max} characters for ${format}.`;
+                 return;
+            }
+
+            try {
+                // We use an SVG element inside the output div
+                const svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                barcodeOutput.appendChild(svgElement);
+
+                JsBarcode(svgElement, text, {
+                    format: format,
+                    lineColor: lineColor,
+                    background: bgColor,
+                    width: width,
+                    height: height,
+                    displayValue: true, // Always show text
+                    text: text, // Use the input text as the display value
+                    textMargin: 5,
+                    fontSize: fontSize, // Custom font size
+                    font: font, // Custom font family
+                    margin: quietZone // Quiet zone adjustment
+                });
+
+                statusMessage.textContent = "✅ Barcode generated successfully! Ready for download.";
+                downloadGroup.style.display = 'flex';
+
+            } catch (e) {
+                console.error("Barcode generation failed:", e);
+                statusMessage.textContent = `❌ Error: Generation failed. Ensure data is compatible with the selected ${format} standard.`;
+            }
+        }
+        
+        // --- Download Functions ---
+
+        // Helper to get the generated SVG string
+        function getSvgString() {
+            const svg = barcodeOutput.querySelector('svg');
+            const serializer = new XMLSerializer();
+            return serializer.serializeToString(svg);
+        }
+
+        // Download SVG (Vector)
+        function downloadSvg() {
+            const svgString = getSvgString();
+            const data = textInput.value.trim() || 'barcode';
+            
+            const blob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `${formatSelect.value.toLowerCase()}_${data.substring(0, 15)}.svg`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Download PNG (Raster)
+        function downloadPng() {
+            const svgString = getSvgString();
+            const data = textInput.value.trim() || 'barcode';
+            const img = new Image();
+            
+            // Convert SVG to data URL
+            const svgDataUrl = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgString)));
+
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0); 
+                
+                const imageDataURL = canvas.toDataURL("image/png");
+                
+                const link = document.createElement("a");
+                link.href = imageDataURL;
+                link.download = `${formatSelect.value.toLowerCase()}_${data.substring(0, 15)}.png`;
+                link.click();
+            };
+            img.src = svgDataUrl;
+        }
+
+        // --- Initialize ---
+        generateBtn.addEventListener('click', generateBarcode);
+        downloadSvgBtn.addEventListener('click', downloadSvg);
+        downloadPngBtn.addEventListener('click', downloadPng);
+        document.addEventListener('DOMContentLoaded', validateData); // Run validation on load
+    </script>
+</body>
+</html>
