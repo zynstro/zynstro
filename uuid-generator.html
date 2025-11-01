@@ -1,0 +1,130 @@
+is.shadowRoot.innerHTML = this._getTemplate();
+            }
+
+            connectedCallback() {
+                // Initialize the version based on the attribute when the element loads
+                this._uuidVersion = this.getAttribute('version') || DEFAULT_VERSION;
+                this._setupEventListeners();
+                this._updateCopyButton(false);
+                this._updateHeader();
+            }
+            
+            // 3. Handle attribute changes (e.g., if version="v1" is changed to version="v4" dynamically)
+            attributeChangedCallback(name, oldValue, newValue) {
+                if (name === 'version' && oldValue !== newValue) {
+                    this._uuidVersion = newValue || DEFAULT_VERSION;
+                    this._updateHeader();
+                    this._resetOutput();
+                }
+            }
+
+            _setupEventListeners() {
+                this.shadowRoot.getElementById('generateBtn').addEventListener('click', this._generateUUID.bind(this));
+                this.shadowRoot.getElementById('copyBtn').addEventListener('click', this._copyUUID.bind(this));
+            }
+            
+            _updateHeader() {
+                const header = this.shadowRoot.getElementById('header');
+                const friendlyVersion = this._uuidVersion.toUpperCase().replace('V', 'Version ');
+                header.textContent = `UUID ${friendlyVersion} Generator`;
+            }
+
+            _resetOutput() {
+                this.shadowRoot.getElementById('uuidOutput').textContent = `Press "Generate UUID" (${this._uuidVersion.toUpperCase()})`;
+                this._currentUUID = null;
+                this._updateCopyButton(false);
+            }
+
+            /**
+             * 4. Dynamic Generation Logic based on the 'version' property
+             */
+            _generateUUID() {
+                try {
+                    switch (this._uuidVersion) {
+                        case 'v1':
+                            this._currentUUID = v1(); // Time-based UUID
+                            break;
+                        case 'v5':
+                            // Name-based UUID (requires a namespace and a name)
+                            // Using a static name ('example.com') for demonstration
+                            this._currentUUID = v5('example.com', NAMESPACE_DNS); 
+                            break;
+                        case 'v4':
+                        default:
+                            this._currentUUID = v4(); // Random/Secure UUID
+                            break;
+                    }
+                    this.shadowRoot.getElementById('uuidOutput').textContent = this._currentUUID;
+                    this._updateCopyButton(true);
+
+                } catch (e) {
+                    this.shadowRoot.getElementById('uuidOutput').textContent = `Error: Cannot generate ${this._uuidVersion.toUpperCase()}. Is the library loaded?`;
+                    console.error("UUID Generation Error:", e);
+                }
+            }
+
+            _updateCopyButton(enabled) {
+                this.shadowRoot.getElementById('copyBtn').disabled = !enabled;
+            }
+
+            async _copyUUID() {
+                if (!this._currentUUID) return;
+
+                const copyFeedback = this.shadowRoot.getElementById('copyFeedback');
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    try {
+                        await navigator.clipboard.writeText(this._currentUUID);
+                        
+                        copyFeedback.classList.add('show');
+                        setTimeout(() => copyFeedback.classList.remove('show'), 1500);
+
+                    } catch (err) {
+                        console.error('Failed to copy text:', err);
+                    }
+                }
+            }
+            
+            _getTemplate() {
+                // (Omitted for brevity, but includes the same encapsulated CSS/HTML structure from the previous answer)
+                // --- PASTE THE PREVIOUS getTemplate() METHOD CONTENT HERE ---
+                return `
+                    <style>
+                        /* Encapsulated CSS from the previous advanced example goes here */
+                        :host { display: block; font-family: 'Segoe UI', sans-serif; padding: 20px; text-align: center; }
+                        :root {
+                            --primary-color: #007bff; --secondary-color: #28a745; --card-background: #ffffff;
+                            --uuid-bg: #e9ecef; --shadow-subtle: 0 6px 20px rgba(0, 0, 0, 0.08); --transition-speed: 0.2s;
+                        }
+                        .container { max-width: 450px; margin: 20px auto; background: var(--card-background); padding: 30px; border-radius: 16px; box-shadow: var(--shadow-subtle); }
+                        h2 { color: var(--primary-color); margin-bottom: 25px; font-weight: 600; }
+                        #uuidOutput { word-break: break-all; background: var(--uuid-bg); padding: 15px; margin: 25px 0; border-radius: 10px; font-size: 1.1em; font-weight: 500; color: #495057; border: 1px solid #dee2e6; min-height: 24px; display: flex; justify-content: center; align-items: center; }
+                        .btn { padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-size: 1em; font-weight: 600; transition: all var(--transition-speed) ease; margin: 0 5px; min-width: 120px; }
+                        #generateBtn { background-color: var(--primary-color); color: white; }
+                        #generateBtn:hover { background-color: #0056b3; transform: translateY(-2px); }
+                        #copyBtn { background-color: var(--secondary-color); color: white; position: relative; overflow: hidden; }
+                        #copyBtn:hover:enabled { background-color: #1e7e34; transform: translateY(-2px); }
+                        #copyBtn:disabled { cursor: not-allowed; opacity: 0.6; }
+                        .copy-feedback { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(40, 167, 69, 0.9); color: white; display: flex; justify-content: center; align-items: center; border-radius: 8px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; font-weight: bold; }
+                        .copy-feedback.show { opacity: 1; }
+                    </style>
+                    <div class="container">
+                        <h2 id="header">UUID Version 4 Generator</h2>
+                        <div id="uuidOutput">Press "Generate UUID" (V4)</div>
+                        <button class="btn" id="generateBtn">Generate UUID</button>
+                        <button class="btn" id="copyBtn">
+                            <span id="copyText">Copy</span>
+                            <div class="copy-feedback" id="copyFeedback">Copied! 🎉</div>
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        customElements.define('uuid-generator', UuidGenerator);
+    </script>
+    <style>
+        body { background-color: #f4f7f6; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 0; }
+        h1 { color: #333; margin-bottom: 10px; }
+    </style>
+</body>
+</html>
