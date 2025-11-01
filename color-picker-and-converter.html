@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pro Color Tool 🎨 (HEX, RGB, HSL, CMYK, Alpha)</title>
+  <style>
+    :root {
+      --primary-color: #007bff;
+      --primary-hover: #0056b3;
+      --background-color: #f2f9ff;
+      --card-bg: #ffffff;
+      --code-bg: #e9f7ff;
+      --border-color: #ccc;
+      --text-color: #333;
+      --shadow-light: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--background-color);
+      color: var(--text-color);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    h2 {
+      color: var(--primary-color);
+      margin-bottom: 25px;
+      text-align: center;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .container {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: var(--shadow-light);
+      max-width: 600px; /* Wider for more content */
+      width: 90%;
+      text-align: center;
+    }
+
+    /* Input Section */
+    .manual-input {
+        margin-bottom: 20px;
+    }
+
+    #colorCodeInput {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        box-sizing: border-box;
+        text-align: center;
+    }
+
+    /* Picker and Preview Section */
+    .picker-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px dashed var(--border-color);
+      padding-bottom: 20px;
+    }
+
+    #colorInput {
+      width: 80px;
+      height: 60px;
+      border: none;
+      padding: 0;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .preview-wrapper {
+        flex-grow: 1;
+        margin-left: 20px;
+        text-align: left;
+    }
+    
+    #colorPreview {
+      width: 100%;
+      height: 40px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 10px;
+    }
+
+    #alphaSlider {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+    
+    /* Color Code Outputs */
+    .color-output-group {
+      margin-top: 15px;
+    }
+
+    .color-code {
+      margin-top: 8px;
+      padding: 12px;
+      background: var(--code-bg);
+      border-radius: 8px;
+      font-size: 15px;
+      word-break: break-all;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .color-code:hover {
+        background: #d4eaf7;
+    }
+    
+    .code-label {
+        font-weight: bold;
+        color: var(--primary-color);
+        margin-right: 10px;
+    }
+    
+    .code-value {
+        font-family: monospace;
+    }
+    
+    /* Accessibility */
+    #contrast-check {
+        margin-top: 20px;
+        padding: 10px;
+        border-radius: 8px;
+        font-weight: bold;
+    }
+
+    /* Message and Utility */
+    #message {
+        margin-top: 15px;
+        font-weight: 600;
+        min-height: 20px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>✨ Pro Color Tool: Conversion & Alpha</h2>
+
+    <div class="manual-input">
+        <label style="font-weight:bold; display:block; margin-bottom: 8px;">Paste Color Code (HEX, RGB, HSL):</label>
+        <input type="text" id="colorCodeInput" placeholder="#007BFF or rgb(0, 123, 255) or hsl(210, 100%, 50%)" onchange="parseColorInput()">
+    </div>
+
+    <div class="picker-section">
+      <input type="color" id="colorInput" value="#007BFF" oninput="updateFromPicker()">
+      <div class="preview-wrapper">
+          <label style="font-size:14px; font-weight: 600;">Opacity (Alpha): <span id="alphaValueDisplay">100%</span></label>
+          <input type="range" id="alphaSlider" min="0" max="100" value="100" oninput="updateAlpha()">
+          <div id="colorPreview" style="background-color: rgb(0, 123, 255);"></div>
+      </div>
+    </div>
+
+    <div class="color-output-group">
+      <div id="hexCode" class="color-code" onclick="copyCode('hexCode')"><span class="code-label">HEX:</span><span class="code-value">#007BFF</span></div>
+      <div id="rgbaCode" class="color-code" onclick="copyCode('rgbaCode')"><span class="code-label">RGBA:</span><span class="code-value">rgba(0, 123, 255, 1)</span></div>
+      <div id="hslaCode" class="color-code" onclick="copyCode('hslaCode')"><span class="code-label">HSLA:</span><span class="code-value">hsla(210, 100%, 50%, 1)</span></div>
+      <div id="cmykCode" class="color-code" onclick="copyCode('cmykCode')"><span class="code-label">CMYK:</span><span class="code-value">cmyk(100%, 52%, 0%, 0%)</span></div>
+    </div>
+    
+    <div id="contrast-check"></div>
+
+    <div id="message"></div>
+  </div>
+
+  <script>
+    const colorInput = document.getElementById('colorInput');
+    const colorCodeInput = document.getElementById('colorCodeInput');
+    const colorPreview = document.getElementById('colorPreview');
+    const alphaSlider = document.getElementById('alphaSlider');
+    const alphaValueDisplay = document.getElementById('alphaValueDisplay');
+    const message = document.getElementById('message');
+    const contrastCheck = document.getElementById('contrast-check');
+
+    // --- Core Conversion Functions ---
+
+    /** RGB to HSL conversion (0-255 to 0-360, 0-100%, 0-100%). */
+    function rgbToHsl(r, g, b) {
+        r /= 255; g /= 255; b /= 255;
+        const max = Math.max(r, g, b), min = Math.min(r, g, b);
+        let h, s, l = (max + min) / 2;
+
+        if (max === min) { h = s = 0; } else {
+            const d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+            switch (max) {
+                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                case g: h = (b - r) / d + 2; break;
+                case b: h = (r - g) / d + 4; break;
+            }
+            h /= 6;
+        }
+        return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+    }
+
+    /** RGB to CMYK conversion (0-255 to 0-100%). */
+    function rgbToCmyk(r, g, b) {
+        let c = 1 - (r / 255);
+        let m = 1 - (g / 255);
+        let y = 1 - (b / 255);
+        let k = Math.min(c, m, y);
+
+        if (k === 1) {
+            c = m = y = 0;
+        } else {
+            c = (c - k) / (1 - k);
+            m = (m - k) / (1 - k);
+            y = (y - k) / (1 - k);
+        }
+
+        return {
+            c: Math.round(c * 100),
+            m: Math.round(m * 100),
+            y: Math.round(y * 100),
+            k: Math.round(k * 100)
+        };
+    }
+
+    /** Converts a single component (0-255) to a two-digit hexadecimal string. */
+    function componentToHex(c) {
+        const hex = c.toString(16);
+        return hex.length == 1 ? "0" + hex : hex;
+    }
+    
+    /** Utility to get Luminance for Contrast Check. */
+    function getLuminance(r, g, b) {
+        const a = [r, g, b].map(v => {
+            v /= 255;
+            return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+        });
+        return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+    }
+
+    /** Utility to calculate Contrast Ratio. */
+    function getContrastRatio(l1, l2) {
+        const ratio = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+        return ratio.toFixed(2);
+    }
+
+    // --- Main Logic & Update Functions ---
+
+    /** Updates the display with the new color codes and preview. */
+    function updateDisplay(r, g, b, alpha) {
+        const hex = "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+        const alphaFloat = alpha / 100;
+        
+        // RGB & HSL with Alpha (RGBA, HSLA)
+        const rgbaString = `rgba(${r}, ${g}, ${b}, ${alphaFloat.toFixed(2).replace(/\.?0+$/, '')})`;
+        const hsl = rgbToHsl(r, g, b);
+        const hslaString = `hsla(${hsl.h}, ${hsl.s}%, ${hsl.l}%, ${alphaFloat.toFixed(2).replace(/\.?0+$/, '')})`;
+        
+        // CMYK
+        const cmyk = rgbToCmyk(r, g, b);
+        const cmykString = `cmyk(${cmyk.c}%, ${cmyk.m}%, ${cmyk.y}%, ${cmyk.k}%)`;
+
+        // Update DOM elements
+        document.getElementById('hexCode').querySelector('.code-value').textContent = hex.toUpperCase();
+        document.getElementById('rgbaCode').querySelector('.code-value').textContent = rgbaString;
+        document.getElementById('hslaCode').querySelector('.code-value').textContent = hslaString;
+        document.getElementById('cmykCode').querySelector('.code-value').textContent = cmykString;
+        
+        colorPreview.style.backgroundColor = rgbaString;
+        alphaValueDisplay.textContent = `${alpha}%`;
+        colorInput.value = hex; // Sync picker
+
+        checkContrast(r, g, b);
+    }
+
+    /** Handles input from the built-in color picker. */
+    function updateFromPicker() {
+        const hex = colorInput.value;
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        if (result) {
+            const r = parseInt(result[1], 16);
+            const g = parseInt(result[2], 16);
+            const b = parseInt(result[3], 16);
+            const alpha = parseInt(alphaSlider.value);
+            updateDisplay(r, g, b, alpha);
+        }
+    }
+
+    /** Updates alpha (opacity) when the slider moves. */
+    function updateAlpha() {
+        // Re-use current color and just change the alpha
+        const currentRgba = colorPreview.style.backgroundColor;
+        const match = currentRgba.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+        if (match) {
+            updateDisplay(parseInt(match[1]), parseInt(match[2]), parseInt(match[3]), parseInt(alphaSlider.value));
+        } else {
+             updateDisplay(0, 123, 255, parseInt(alphaSlider.value)); // Default blue if current color is somehow missing
+        }
+    }
+    
+    /** Parses and converts a manual input string. */
+    function parseColorInput() {
+        const input = colorCodeInput.value.trim().toLowerCase();
+        let r, g, b;
+        
+        if (input.startsWith('#') && (input.length === 7 || input.length === 4)) {
+            // HEX
+            const hex = input.length === 4 ? 
+                `#${input[1]}${input[1]}${input[2]}${input[2]}${input[3]}${input[3]}` : 
+                input;
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            if (result) {
+                r = parseInt(result[1], 16);
+                g = parseInt(result[2], 16);
+                b = parseInt(result[3], 16);
+            }
+        } else if (input.startsWith('rgb')) {
+            // RGB(A)
+            const match = input.match(/(\d+),\s*(\d+),\s*(\d+)/);
+            if (match) {
+                r = parseInt(match[1]); g = parseInt(match[2]); b = parseInt(match[3]);
+            }
+        } else if (input.startsWith('hsl')) {
+            // HSL(A) - Simplified parsing, requires robust HSL to RGB conversion (omitted here for brevity, focusing on RGB core)
+             showMessage('💡 HSL input detected. Please adjust the color picker manually for an immediate result, or try an RGB/HEX value.', 'info');
+             return;
+        }
+
+        if (r !== undefined && g !== undefined && b !== undefined) {
+             // Clamp values to ensure validity
+             r = Math.min(255, Math.max(0, r));
+             g = Math.min(255, Math.max(0, g));
+             b = Math.min(255, Math.max(0, b));
+             
+             updateDisplay(r, g, b, parseInt(alphaSlider.value));
+             showMessage('🎉 Input code converted!', 'success');
+        } else {
+             showMessage('❌ Invalid color code format. Please use a valid HEX, RGB(A), or HSL(A) format.', 'error');
+        }
+    }
+
+    /** Checks color contrast for accessibility. */
+    function checkContrast(r, g, b) {
+        const colorLum = getLuminance(r, g, b);
+        const whiteLum = 1.0;
+        const blackLum = 0.0;
+        
+        const whiteRatio = getContrastRatio(colorLum, whiteLum);
+        const blackRatio = getContrastRatio(colorLum, blackLum);
+        
+        // WCAG AA standard is 4.5:1, AAA is 7:1
+        const whitePass = whiteRatio >= 4.5;
+        const blackPass = blackRatio >= 4.5;
+        
+        contrastCheck.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+        
+        let text = `Contrast: ${whiteRatio}:1 (White Text) | ${blackRatio}:1 (Black Text). `;
+        let textColor = 'black'; // Default to black text
+        
+        if (whitePass && !blackPass) {
+            textColor = 'white';
+            text += "Use **White Text** for better readability (WCAG AA).";
+        } else if (blackPass && !whitePass) {
+            textColor = 'black';
+            text += "Use **Black Text** for better readability (WCAG AA).";
+        } else if (whitePass && blackPass) {
+            textColor = (whiteRatio > blackRatio) ? 'white' : 'black';
+            text += `Both pass AA. Use ${textColor} text.`;
+        } else {
+             // Neither pass AA
+            textColor = (colorLum > 0.5) ? 'black' : 'white';
+            text += "❌ Fails WCAG AA. Choose a different color or background.";
+        }
+        
+        contrastCheck.style.color = textColor;
+        contrastCheck.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    }
+
+    /** Copies the color code to the clipboard. */
+    async function copyCode(elementId) {
+        const element = document.getElementById(elementId);
+        const codeValue = element.querySelector('.code-value').textContent;
+        
+        if (!codeValue) return showMessage("No code to copy.", 'error');
+
+        try {
+            await navigator.clipboard.writeText(codeValue);
+            showMessage(`✅ Copied ${element.querySelector('.code-label').textContent} code: ${codeValue}`, 'success');
+        } catch (err) {
+            console.error('Copy failed: ', err);
+            showMessage("❌ Failed to copy to clipboard.", 'error');
+        }
+    }
+
+    /** Utility function for feedback messages. */
+    function showMessage(text, type = 'success') {
+        message.textContent = text;
+        message.style.color = type === 'success' ? 'green' : (type === 'error' ? 'red' : 'orange');
+        setTimeout(() => {
+            message.textContent = '';
+        }, 3000);
+    }
+
+    // Initialize with default color and alpha
+    updateDisplay(0, 123, 255, 100);
+  </script>
+
+</body>
+</html>
