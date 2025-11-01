@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advanced URL Encoder / Decoder</title>
+  <style>
+    :root {
+      --primary-color: #007bff;
+      --primary-hover: #0056b3;
+      --background-color: #f5faff;
+      --input-bg: #ffffff;
+      --result-bg: #e9f7ff;
+      --border-color: #ccc;
+      --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--background-color);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 700px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: var(--shadow-light);
+    }
+
+    h2 {
+      color: var(--primary-color);
+      text-align: center;
+      margin-bottom: 25px;
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 10px;
+    }
+
+    .box-label {
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .input-box,
+    #resultBox {
+      width: 100%;
+      min-height: 120px; /* Increased height */
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 15px;
+      font-size: 16px;
+      margin-bottom: 15px;
+      white-space: pre-wrap;
+      outline: none;
+      overflow-y: auto;
+      resize: vertical; /* Allow resizing */
+      box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    }
+    
+    #resultBox {
+        background: var(--result-bg);
+        border-style: dashed;
+        color: #000;
+        cursor: pointer;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-size: 16px;
+      border-radius: 6px;
+      margin: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    button:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    #message {
+      text-align: center;
+      margin-top: 10px;
+      font-weight: bold;
+      min-height: 20px;
+    }
+
+    .error {
+      color: red;
+    }
+
+    .success {
+      color: green;
+    }
+
+    /* Styling for the contenteditable placeholder */
+    [contenteditable]:empty:before {
+      content: attr(placeholder);
+      color: #999;
+      pointer-events: none;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>🔗 Advanced URL Encoder / Decoder</h2>
+
+    <label for="urlInput" class="box-label">Input Text / URL:</label>
+    <div id="urlInput" class="input-box" contenteditable="true" placeholder="Enter text or an encoded URL here..."></div>
+
+    <div class="button-group">
+      <button onclick="encodeURL()">Encode URL</button>
+      <button onclick="decodeURL()">Decode URL</button>
+      <button onclick="clearInputAndResult()">Clear All</button>
+      <button onclick="copyToInput()">Swap (Result to Input)</button>
+    </div>
+    
+    <label for="resultBox" class="box-label">Result (Click to Copy):</label>
+    <div id="resultBox" class="input-box" onclick="copyResult()" placeholder="Result will appear here..."></div>
+
+    <div id="message"></div>
+  </div>
+
+  <script>
+    const urlInput = document.getElementById("urlInput");
+    const resultBox = document.getElementById("resultBox");
+    const message = document.getElementById("message");
+
+    /** Clears the message area after a delay. */
+    function clearMessageAfterDelay() {
+        setTimeout(() => {
+            message.innerText = '';
+            message.className = '';
+        }, 3000);
+    }
+
+    /** Encodes the input text using encodeURIComponent. */
+    function encodeURL() {
+      const input = urlInput.innerText.trim();
+      if (!input) {
+        resultBox.innerText = '';
+        message.innerText = "⚠️ Input is empty. Nothing to encode.";
+        message.className = 'error';
+        clearMessageAfterDelay();
+        return;
+      }
+      try {
+        const encoded = encodeURIComponent(input);
+        resultBox.innerText = encoded;
+        message.innerText = "✅ Successfully Encoded!";
+        message.className = 'success';
+      } catch (e) {
+        resultBox.innerText = '';
+        message.innerText = "❌ Error during encoding.";
+        message.className = 'error';
+      }
+      clearMessageAfterDelay();
+    }
+
+    /** Decodes the input text using decodeURIComponent. */
+    function decodeURL() {
+      const input = urlInput.innerText.trim();
+       if (!input) {
+        resultBox.innerText = '';
+        message.innerText = "⚠️ Input is empty. Nothing to decode.";
+        message.className = 'error';
+        clearMessageAfterDelay();
+        return;
+      }
+      try {
+        // We use the same function for both, assuming the user swaps the content
+        const decoded = decodeURIComponent(input);
+        resultBox.innerText = decoded;
+        message.innerText = "✅ Successfully Decoded!";
+        message.className = 'success';
+      } catch (e) {
+        resultBox.innerText = '';
+        message.innerText = "❌ Invalid encoded sequence found. Could not decode.";
+        message.className = 'error';
+      }
+      clearMessageAfterDelay();
+    }
+    
+    /** Clears both the input and result boxes. */
+    function clearInputAndResult() {
+        urlInput.innerText = '';
+        resultBox.innerText = '';
+        message.innerText = "🗑️ Input and Result cleared.";
+        message.className = '';
+        clearMessageAfterDelay();
+    }
+
+    /** Swaps the content from the result box to the input box. */
+    function copyToInput() {
+        const result = resultBox.innerText.trim();
+        if (result) {
+            urlInput.innerText = result;
+            resultBox.innerText = ''; // Clear result after swapping
+            message.innerText = "🔄 Result moved to Input.";
+            message.className = '';
+        } else {
+            message.innerText = "⚠️ Result is empty. Nothing to swap.";
+            message.className = 'error';
+        }
+        clearMessageAfterDelay();
+    }
+
+    /** Copies the content of the result box to the clipboard. */
+    async function copyResult() {
+      const textToCopy = resultBox.innerText.trim();
+      if (!textToCopy) {
+        message.innerText = "⚠️ Result is empty. Nothing to copy.";
+        message.className = 'error';
+        clearMessageAfterDelay();
+        return;
+      }
+
+      try {
+        // Use the modern clipboard API
+        await navigator.clipboard.writeText(textToCopy);
+        message.innerText = "📋 Result copied to clipboard!";
+        message.className = 'success';
+      } catch (err) {
+        // Fallback for older browsers or failed clipboard access
+        console.error('Could not copy text: ', err);
+        message.innerText = "❌ Failed to copy (check console for error).";
+        message.className = 'error';
+      }
+      clearMessageAfterDelay();
+    }
+  </script>
+
+</body>
+</html>
