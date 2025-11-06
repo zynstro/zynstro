@@ -1,126 +1,200 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset 
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Homepage -->
   <url>
-    <loc>https://www.zynstro.xyz/generate-sitemap.html#</loc>
+    <loc>https://www.zynstro.xyz/</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
   </url>
+
+  <!-- Tools -->
+  <url>
+    <loc>https://www.zynstro.xyz/generate-sitemap.html</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
   <url>
     <loc>https://www.zynstro.xyz/image-converter</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
+
   <url>
     <loc>https://www.zynstro.xyz/image-compressor</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
+
   <url>
     <loc>https://www.zynstro.xyz/image-resizer</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
+
   <url>
     <loc>https://www.zynstro.xyz/image-crop</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
+
   <url>
     <loc>https://www.zynstro.xyz/image-to-text</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
-  <url>
-    <loc>https://www.zynstro.xyz/image-rotator</loc>
-  </url>
+
   <url>
     <loc>https://www.zynstro.xyz/pdf-to-word</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
+
   <url>
     <loc>https://www.zynstro.xyz/pdf-compressor</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
+
   <url>
     <loc>https://www.zynstro.xyz/pdf-merger-and-splitter</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
+
   <url>
     <loc>https://www.zynstro.xyz/document-converter</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://www.zynstro.xyz/pdf-lock-and-unlock</loc>
-  </url>
+
   <url>
     <loc>https://www.zynstro.xyz/e-sign-pdf</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
+
+  <!-- Calculators -->
   <url>
     <loc>https://www.zynstro.xyz/scientific-calculator</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
+
   <url>
     <loc>https://www.zynstro.xyz/age-calculator</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
+
   <url>
     <loc>https://www.zynstro.xyz/bmi-calculator</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://www.zynstro.xyz/emi-calculator</loc>
-  </url>
-  <url>
-    <loc>https://www.zynstro.xyz/gst-calculator</loc>
-  </url>
+
   <url>
     <loc>https://www.zynstro.xyz/currency-calculator</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
   </url>
+
+  <!-- Text Tools -->
   <url>
     <loc>https://www.zynstro.xyz/text-case-converter</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
+
   <url>
     <loc>https://www.zynstro.xyz/word-and-character-counter</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://www.zynstro.xyz/remove-duplicate-lines</loc>
-  </url>
-  <url>
-    <loc>https://www.zynstro.xyz/text-shortener</loc>
-  </url>
+
   <url>
     <loc>https://www.zynstro.xyz/text-reverser</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
-  <url>
-    <loc>https://www.zynstro.xyz/text-encryptor</loc>
-  </url>
+
+  <!-- Developer Tools -->
   <url>
     <loc>https://www.zynstro.xyz/html-css-js-minifier</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
+
   <url>
     <loc>https://www.zynstro.xyz/json-formatter-and-validator</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
-  <url>
-    <loc>https://www.zynstro.xyz/base64-encoder-and-decoder</loc>
-  </url>
-  <url>
-    <loc>https://www.zynstro.xyz/url-encoder-and-decoder</loc>
-  </url>
-  <url>
-    <loc>https://www.zynstro.xyz/color-picker-and-converter</loc>
-  </url>
-  <url>
-    <loc>https://www.zynstro.xyz/regex-tester</loc>
-  </url>
+
   <url>
     <loc>https://www.zynstro.xyz/qr-code-generator</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
-  <url>
-    <loc>https://www.zynstro.xyz/barcode-generator</loc>
-  </url>
-  <url>
-    <loc>https://www.zynstro.xyz/uuid-generator</loc>
-  </url>
-  <url>
-    <loc>https://www.zynstro.xyz/unit-converter</loc>
-  </url>
+
   <url>
     <loc>https://www.zynstro.xyz/time-zone-converter</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
-  <url>
-    <loc>https://www.zynstro.xyz/random-password-generator</loc>
-  </url>
+
+  <!-- Pages -->
   <url>
     <loc>https://www.zynstro.xyz/privacy-policy</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
   </url>
+
   <url>
     <loc>https://www.zynstro.xyz/term-and-conditions</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
   </url>
+
   <url>
     <loc>https://www.zynstro.xyz/about</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
   </url>
+
   <url>
     <loc>https://www.zynstro.xyz/contact</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
   </url>
+
 </urlset>
