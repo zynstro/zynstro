@@ -1,43 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Fixed: Removed duplicate favicon link -->
+    <link rel="icon" href="favicon-16x16.png" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Fixed: Moved meta tag inside head section -->
+    <meta name="msvalidate.01" content="F89634932549FB92D83A07A052DC85E5" />
     <title>Zynstro - Your Daily Tools, All in One Place</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* CSS Variables */
         :root {
             --primary-blue: #2563eb;
             --primary-dark: #1e40af;
             --primary-light: #3b82f6;
             --accent-blue: #60a5fa;
             --gradient-blue: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
-            --gradient-purple: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
             --gradient-light: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+            --gradient-ai: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+            --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
             --text-dark: #1e293b;
             --text-light: #64748b;
             --background: #f8fafc;
             --card-bg: #ffffff;
+            --card-hover: #ffffff;
             --border-radius: 20px;
             --border-radius-sm: 12px;
+            --border-radius-lg: 28px;
             --shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
             --shadow-hover: 0 10px 40px rgba(0, 0, 0, 0.1);
+            --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.06);
             --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --transition-slow: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
+        /* Dark Mode Variables */
         .dark-mode {
             --primary-blue: #3b82f6;
             --primary-dark: #60a5fa;
+            --primary-light: #2563eb;
+            --accent-blue: #93c5fd;
             --gradient-blue: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
-            --gradient-purple: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%);
             --gradient-light: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            --gradient-ai: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%);
+            --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
             --text-dark: #f1f5f9;
             --text-light: #cbd5e1;
             --background: #0f172a;
             --card-bg: #1e293b;
+            --card-hover: #1e293b;
             --shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
             --shadow-hover: 0 10px 40px rgba(0, 0, 0, 0.3);
+            --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.2);
         }
 
         * {
@@ -47,11 +63,11 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             color: var(--text-dark);
             background-color: var(--background);
-            transition: var(--transition);
+            transition: var(--transition-slow);
         }
 
         a {
@@ -72,13 +88,14 @@
             padding: 0 20px;
         }
 
-        /* Header */
+        /* Header Styles */
         header {
             background-color: var(--card-bg);
             box-shadow: var(--shadow);
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: var(--transition);
         }
 
         .header-content {
@@ -90,7 +107,7 @@
 
         .logo {
             font-size: 24px;
-            font-weight: 800;
+            font-weight: 700;
             color: var(--primary-blue);
         }
 
@@ -162,7 +179,7 @@
 
         /* Hero Section */
         .hero {
-            padding: 120px 0 100px;
+            padding: 100px 0 80px;
             text-align: center;
             background: var(--gradient-light);
             position: relative;
@@ -181,13 +198,12 @@
         }
 
         .hero h1 {
-            font-size: 52px;
+            font-size: 48px;
             margin-bottom: 20px;
             color: var(--text-dark);
             line-height: 1.2;
             position: relative;
             z-index: 1;
-            font-weight: 800;
         }
 
         .hero p {
@@ -200,9 +216,9 @@
         }
 
         .cta-button {
-            background: var(--gradient-purple);
+            background-color: var(--primary-blue);
             color: white;
-            padding: 16px 36px;
+            padding: 14px 32px;
             border-radius: var(--border-radius);
             font-size: 18px;
             font-weight: 600;
@@ -212,19 +228,19 @@
             gap: 8px;
             position: relative;
             z-index: 1;
-            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
         }
 
         .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(59, 130, 246, 0.4);
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
         }
 
         .tool-icons {
             display: flex;
             justify-content: center;
             gap: 30px;
-            margin-top: 60px;
+            margin-top: 50px;
             flex-wrap: wrap;
             position: relative;
             z-index: 1;
@@ -240,41 +256,16 @@
             justify-content: center;
             box-shadow: var(--shadow);
             transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .icon-circle::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--gradient-blue);
-            opacity: 0;
-            transition: var(--transition);
         }
 
         .icon-circle:hover {
-            transform: translateY(-5px) scale(1.05);
+            transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .icon-circle:hover::before {
-            opacity: 1;
         }
 
         .icon-circle i {
             font-size: 32px;
             color: var(--primary-blue);
-            position: relative;
-            z-index: 1;
-            transition: var(--transition);
-        }
-
-        .icon-circle:hover i {
-            color: white;
         }
 
         /* Search Section */
@@ -340,34 +331,12 @@
             font-weight: 500;
             transition: var(--transition);
             border: 1px solid #e2e8f0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .category-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--gradient-blue);
-            opacity: 0;
-            transition: var(--transition);
-        }
-
-        .category-btn span {
-            position: relative;
-            z-index: 1;
         }
 
         .category-btn.active, .category-btn:hover {
+            background-color: var(--primary-blue);
             color: white;
             border-color: var(--primary-blue);
-        }
-
-        .category-btn.active::before, .category-btn:hover::before {
-            opacity: 1;
         }
 
         /* Tools Sections */
@@ -380,7 +349,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px; /* Reduced from 30px to 15px */
+            margin-bottom: 30px;
         }
 
         .section-title {
@@ -389,22 +358,17 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            font-weight: 700;
         }
 
         .section-description {
             color: var(--text-light);
             max-width: 600px;
-            margin-bottom: 10px; /* Added to reduce space below description */
         }
 
         .view-all {
             color: var(--primary-blue);
             font-weight: 500;
             transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 5px;
         }
 
         .view-all:hover {
@@ -428,7 +392,6 @@
             height: 100%;
             position: relative;
             overflow: hidden;
-            border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         .tool-card::before {
@@ -438,7 +401,7 @@
             left: 0;
             width: 100%;
             height: 4px;
-            background: var(--gradient-purple);
+            background: var(--gradient-blue);
             transform: scaleX(0);
             transform-origin: left;
             transition: var(--transition);
@@ -492,38 +455,6 @@
 
         .tool-button:hover {
             background-color: var(--primary-dark);
-        }
-
-        /* Stats Section */
-        .stats-section {
-            padding: 80px 0;
-            background: var(--gradient-light);
-            text-align: center;
-        }
-
-        .stats-container {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 30px;
-        }
-
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .stat-number {
-            font-size: 48px;
-            font-weight: 800;
-            color: var(--primary-blue);
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            color: var(--text-light);
-            font-size: 16px;
         }
 
         /* Footer */
@@ -605,7 +536,7 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background: var(--gradient-purple);
+            background-color: var(--primary-blue);
             color: white;
             display: flex;
             align-items: center;
@@ -624,13 +555,8 @@
         }
 
         .scroll-to-top:hover {
+            background-color: var(--primary-dark);
             transform: translateY(-3px);
-        }
-
-        /* Ad Container */
-        .ad-container {
-            margin: 40px 0;
-            text-align: center;
         }
 
         /* Responsive Styles */
@@ -704,16 +630,11 @@
                 align-items: flex-start;
                 gap: 10px;
             }
-            
-            .stats-container {
-                flex-direction: column;
-                gap: 40px;
-            }
         }
 
         @media (max-width: 576px) {
             .hero {
-                padding: 80px 0;
+                padding: 60px 0;
             }
             
             .hero h1 {
@@ -738,6 +659,15 @@
             }
         }
     </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Zynstro",
+      "url": "https://www.zynstro.xyz/",
+      "logo": "https://www.zynstro.xyz/favicon-16x16.png"
+    }
+    </script>
 </head>
 <body>
     <!-- Header -->
@@ -750,6 +680,7 @@
                     <ul>
                         <li><a href="#">Home</a></li>
                         <li><a href="#">Tools</a></li>
+                        <li><a href="#">Features</a></li>
                         <li><a href="#">Contact</a></li>
                     </ul>
                 </nav>
@@ -806,35 +737,15 @@
     <!-- Category Filter -->
     <div class="container">
         <div class="category-filter" id="category-filter">
-            <button class="category-btn active" data-category="all"><span>All Tools</span></button>
-            <button class="category-btn" data-category="image"><span>Image Tools</span></button>
-            <button class="category-btn" data-category="document"><span>Document Tools</span></button>
-            <button class="category-btn" data-category="calculator"><span>Calculator Tools</span></button>
-            <button class="category-btn" data-category="text"><span>Text Tools</span></button>
-            <button class="category-btn" data-category="web"><span>Web Tools</span></button>
-            <button class="category-btn" data-category="utility"><span>Utility Tools</span></button>
+            <button class="category-btn active" data-category="all">All Tools</button>
+            <button class="category-btn" data-category="image">Image Tools</button>
+            <button class="category-btn" data-category="document">Document Tools</button>
+            <button class="category-btn" data-category="calculator">Calculator Tools</button>
+            <button class="category-btn" data-category="text">Text Tools</button>
+            <button class="category-btn" data-category="web">Web Tools</button>
+            <button class="category-btn" data-category="utility">Utility Tools</button>
         </div>
     </div>
-
-    <!-- Stats Section -->
-    <section class="stats-section">
-        <div class="container">
-            <div class="stats-container">
-                <div class="stat-item">
-                    <div class="stat-number">35+</div>
-                    <div class="stat-label">Tools Available</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">99.9%</div>
-                    <div class="stat-label">Uptime</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">0</div>
-                    <div class="stat-label">Cost</div>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- Tools Sections -->
     <div class="container">
@@ -848,7 +759,7 @@
                     </h2>
                     <p class="section-description">Edit, convert, and optimize your images with our powerful tools</p>
                 </div>
-                <a href="#" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+                <a href="#" class="view-all">View All</a>
             </div>
             <div class="tools-grid">
                 <div class="tool-card">
@@ -912,7 +823,7 @@
                     </h2>
                     <p class="section-description">Manage, convert, and edit your documents with ease</p>
                 </div>
-                <a href="#" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+                <a href="#" class="view-all">View All</a>
             </div>
             <div class="tools-grid">
                 <div class="tool-card">
@@ -976,7 +887,7 @@
                     </h2>
                     <p class="section-description">Perform calculations for various purposes with our specialized calculators</p>
                 </div>
-                <a href="#" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+                <a href="#" class="view-all">View All</a>
             </div>
             <div class="tools-grid">
                 <div class="tool-card">
@@ -1040,7 +951,7 @@
                     </h2>
                     <p class="section-description">Manipulate and analyze text with our comprehensive text tools</p>
                 </div>
-                <a href="#" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+                <a href="#" class="view-all">View All</a>
             </div>
             <div class="tools-grid">
                 <div class="tool-card">
@@ -1104,7 +1015,7 @@
                     </h2>
                     <p class="section-description">Essential tools for web developers and programmers</p>
                 </div>
-                <a href="#" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+                <a href="#" class="view-all">View All</a>
             </div>
             <div class="tools-grid">
                 <div class="tool-card">
@@ -1156,9 +1067,8 @@
                     <a href="regex-tester" class="tool-button">Use Tool</a>
                 </div>
             </div>
-
-            <!-- Middle Ad -->
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9028086384434844"
+        </section>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9028086384434844"
      crossorigin="anonymous"></script>
 <!-- Main Page ADs -->
 <ins class="adsbygoogle"
@@ -1170,8 +1080,6 @@
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
-            </div>
-
         <!-- Utility Tools -->
         <section class="tools-section" data-category="utility">
             <div class="section-header">
@@ -1182,7 +1090,7 @@
                     </h2>
                     <p class="section-description">Handy tools for everyday tasks and conversions</p>
                 </div>
-                <a href="#" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+                <a href="#" class="view-all">View All</a>
             </div>
             <div class="tools-grid">
                 <div class="tool-card">
@@ -1291,6 +1199,7 @@
         const themeToggle = document.getElementById('theme-toggle');
         const themeIcon = themeToggle.querySelector('i');
         
+        // Check for saved theme preference or default to light
         const currentTheme = localStorage.getItem('theme') || 'light';
         
         if (currentTheme === 'dark') {
@@ -1323,6 +1232,7 @@
             const searchTerm = this.value.toLowerCase().trim();
             let visibleCount = 0;
             
+            // Reset all tool cards and sections to be visible
             toolCards.forEach(card => {
                 card.style.display = 'flex';
             });
@@ -1330,8 +1240,10 @@
                 section.style.display = 'block';
             });
             
+            // If search is empty, show all tools and sections
             if (searchTerm === '') {
                 searchResultsInfo.textContent = '';
+                // Re-apply category filter if active
                 const activeCategory = document.querySelector('.category-btn.active').dataset.category;
                 if (activeCategory !== 'all') {
                     applyCategoryFilter(activeCategory);
@@ -1339,7 +1251,7 @@
                 return;
             }
             
-            // Search in tool cards
+            // Filter tools based on search term
             toolCards.forEach(card => {
                 const toolName = card.querySelector('.tool-name').textContent.toLowerCase();
                 const toolDescription = card.querySelector('.tool-description').textContent.toLowerCase();
@@ -1352,7 +1264,7 @@
                 }
             });
             
-            // Hide sections without visible content
+            // Show/hide sections based on whether they have visible tools
             toolSections.forEach(section => {
                 const sectionTools = section.querySelectorAll('.tool-card');
                 let hasVisibleTools = false;
@@ -1370,6 +1282,7 @@
                 }
             });
             
+            // Update search results info
             if (visibleCount === 0) {
                 searchResultsInfo.textContent = 'No tools found matching your search.';
             } else {
@@ -1381,6 +1294,7 @@
         const categoryButtons = document.querySelectorAll('.category-btn');
         
         function applyCategoryFilter(category) {
+            // Show/hide sections based on category
             toolSections.forEach(section => {
                 if (category === 'all' || section.getAttribute('data-category') === category) {
                     section.style.display = 'block';
@@ -1389,6 +1303,7 @@
                 }
             });
             
+            // Reset all tool cards to be visible
             toolCards.forEach(card => {
                 card.style.display = 'flex';
             });
@@ -1396,12 +1311,18 @@
         
         categoryButtons.forEach(button => {
             button.addEventListener('click', () => {
+                // Remove active class from all buttons
                 categoryButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active class to clicked button
                 button.classList.add('active');
                 
                 const category = button.getAttribute('data-category');
+                
+                // Apply category filter
                 applyCategoryFilter(category);
                 
+                // Clear search when changing category
                 searchInput.value = '';
                 searchResultsInfo.textContent = '';
             });
@@ -1430,6 +1351,7 @@
         
         toolButtons.forEach(button => {
             button.addEventListener('click', function(e) {
+                // Show a success message
                 const originalText = this.textContent;
                 this.textContent = 'Redirecting...';
                 this.style.backgroundColor = '#10b981';
@@ -1449,12 +1371,14 @@
                 const section = button.closest('.tools-section');
                 const category = section.getAttribute('data-category');
                 
+                // Set the category filter to this category
                 categoryButtons.forEach(btn => {
                     if (btn.dataset.category === category) {
                         btn.click();
                     }
                 });
                 
+                // Scroll to the category filter
                 document.getElementById('category-filter').scrollIntoView({ behavior: 'smooth' });
             });
         });
@@ -1465,38 +1389,11 @@
             e.preventDefault();
             document.getElementById('search-tools').focus();
         });
-
-        // Add animation to stats on scroll
-        const statsSection = document.querySelector('.stats-section');
-        const statNumbers = document.querySelectorAll('.stat-number');
-        
-        function animateStats() {
-            statNumbers.forEach(stat => {
-                const target = parseInt(stat.textContent);
-                let current = 0;
-                const increment = target / 50;
-                const timer = setInterval(() => {
-                    current += increment;
-                    if (current >= target) {
-                        current = target;
-                        clearInterval(timer);
-                    }
-                    stat.textContent = Math.floor(current) + (stat.textContent.includes('+') ? '+' : '');
-                }, 30);
-            });
-        }
-        
-        let statsAnimated = false;
-        
-        window.addEventListener('scroll', () => {
-            const sectionPos = statsSection.getBoundingClientRect().top;
-            const screenPos = window.innerHeight / 1.3;
-            
-            if (sectionPos < screenPos && !statsAnimated) {
-                animateStats();
-                statsAnimated = true;
-            }
-        });
     </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9028086384434844"
+     crossorigin="anonymous"></script>
 </body>
+    <amp-auto-ads type="adsense"
+        data-ad-client="ca-pub-9028086384434844">
+</amp-auto-ads>
 </html>
